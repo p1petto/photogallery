@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Hello World!</title>
-    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-    <script src="https://unpkg.com/aframe-template-component@3.x.x/dist/aframe-template-component.min.js"></script>
-    <script src="https://unpkg.com/aframe-layout-component@4.x.x/dist/aframe-layout-component.min.js"></script>
-    <script src="https://unpkg.com/aframe-event-set-component@5.x.x/dist/aframe-event-set-component.min.js"></script>
-    <script src="https://unpkg.com/aframe-proxy-event-component@2.1.0/dist/aframe-proxy-event-component.min.jss"></script>
 
-    <script type="text/javascript" src="aim-component.js"></script>
-    <link rel="stylesheet" href="style.css">
-    
-    <script id="pic" type="text/html">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hello World!</title>
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <script src="https://unpkg.com/aframe-template-component@3.x.x/dist/aframe-template-component.min.js"></script>
+  <script src="https://unpkg.com/aframe-layout-component@4.x.x/dist/aframe-layout-component.min.js"></script>
+  <script src="https://unpkg.com/aframe-event-set-component@5.x.x/dist/aframe-event-set-component.min.js"></script>
+  <script src="https://unpkg.com/aframe-proxy-event-component@2.1.0/dist/aframe-proxy-event-component.min.jss"></script>
+
+  <script type="text/javascript" src="aim-component.js"></script>
+  <link rel="stylesheet" href="style.css">
+
+  <script id="pic" type="text/html">
       <a-entity class="link"> 
         <a-entity
           class="pic-link"
@@ -35,49 +36,46 @@
         ></a-image>
       </a-entity>
     </script>
-    
-
-    <script src="app.js"></script>
-    
-  </head>
-  <body>
-    <a-scene>
-      <a-assets>
-        <audio
-          id="click-sound"
-          src="https://cdn.aframe.io/360-image-gallery-boilerplate/audio/click.ogg"
-        ></audio>
-        <img
-          id="floor-image"
-          src="https://cdn.glitch.global/d5227360-59d8-4247-aaa3-1132bbaf71bc/backglow.png?v=1727087133815"
-        /><img />
-      </a-assets>
 
 
-      <a-entity
-        id="links"
-        layout="type: line; margin: 1.5"
-        position="3 2 7"
-        rotation="10 -70 0"
-      >
-        <a-entity template="src: #pic" ></a-entity>
-        <a-entity template="src: #pic" ></a-entity>
-        <a-entity template="src: #pic" ></a-entity>
-      </a-entity>
+  <script src="app.js"></script>
 
-      <a-camera position="0 1 10">
-        <a-cursor
-          id="cursor"
-          animation__click="property: scale; from: 0.1 0.1 0.1; to: 1 1 1; easing: easeInCubic; dur: 150; startEvents: click"
-          animation__clickreset="property: scale; to: 0.1 0.1 0.1; dur: 1; startEvents: animationcomplete__click"
-          animation__fusing="property: scale; from: 1 1 1; to: 0.1 0.1 0.1; easing: easeInCubic; dur: 150; startEvents: fusing"
-        ></a-cursor>
-        
-      </a-camera>
-      <a-box aim="color: red" position="-10 0 5" color="red"></a-box>
+</head>
+
+<body>
+  <a-scene>
+    <a-assets>
+      <audio id="click-sound" src="https://cdn.aframe.io/360-image-gallery-boilerplate/audio/click.ogg"></audio>
+      <img id="floor-image"
+        src="https://cdn.glitch.global/d5227360-59d8-4247-aaa3-1132bbaf71bc/backglow.png?v=1727087133815" /><img />
+    </a-assets>
+
+
+
+    <a-entity id="links" layout="type: line; margin: 1.5" position="3 2 7" rotation="10 -70 0">
+      <a-entity template="src: #pic"></a-entity>
+      <a-entity template="src: #pic"></a-entity>
+      <a-entity template="src: #pic"></a-entity>
+    </a-entity>
+
+    <a-camera position="0 1 10">
+      <a-cursor id="cursor"
+        animation__click="property: scale; from: 0.1 0.1 0.1; to: 1 1 1; easing: easeInCubic; dur: 150; startEvents: click"
+        animation__clickreset="property: scale; to: 0.1 0.1 0.1; dur: 1; startEvents: animationcomplete__click"
+        animation__fusing="property: scale; from: 1 1 1; to: 0.1 0.1 0.1; easing: easeInCubic; dur: 150; startEvents: fusing"></a-cursor>
+
+    </a-camera>
+    <!-- <a-box aim="color: red" position="-10 0 5" color="red"></a-box>
         <a-box aim="color: blue" position="10 0 5" color="blue"></a-box>
-        <a-box aim="color: green; glyph: ←" position="0 1 5" color="green"></a-box>
-      <a-sky color="#040223"></a-sky>
-    </a-scene>
-  </body>
+        <a-box aim="color: green; glyph: ←" position="0 1 5" color="green"></a-box> -->
+    <a-sky color="#040223"></a-sky>
+    <a-entity>
+      <a-box aim="color: white" position="0 0 10" color="red" visible="false"></a-box>
+      <a-image position="0 0 10" rotation="-90 0 0" width="4" height="4"   src="#floor-image"></a-image>
+    </a-entity>
+
+    
+  </a-scene>
+</body>
+
 </html>
