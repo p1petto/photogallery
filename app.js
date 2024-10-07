@@ -1,4 +1,5 @@
 'use strict';
+
 document.addEventListener("DOMContentLoaded", function () {
     const positions = [
       { x: -2, y: 0, z: -8 }
@@ -19,7 +20,6 @@ document.addEventListener("DOMContentLoaded", function () {
       const entity = document.createElement("a-entity");
       entity.setAttribute("template", "src: #pic");
       entity.setAttribute("position", `${newPosition.x} ${newPosition.y} ${newPosition.z}`);
-      entity.setAttribute("data-box1color", "red")
       
       // Добавляем анимацию перемещения
       entity.setAttribute("animation__move", `
@@ -32,17 +32,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
       entities.push(entity); // Добавляем в массив entities
       scene.appendChild(entity);
-    }
 
-    // Обновляем позицию после завершения анимации
-    entities.forEach((entity, index) => {
-      entity.addEventListener("animationcomplete__move", function () {
-        let currentPosition = entity.getAttribute("position");
-        // Если элемент переместился за maxZ, перемещаем его в начало ряда
-        if (currentPosition.z >= maxZ + distance) {
-          entity.setAttribute("position", `${currentPosition.x} ${currentPosition.y} ${-8}`);
+      // Обрабатываем событие когда шаблон отрисован
+      entity.addEventListener('templaterendered', function () {
+        if (i === 2) { // Третий элемент (индекс 2)
+          const picLink = entity.querySelector(".pic-link");
+          if (picLink) {
+            picLink.setAttribute("material", "color", "red"); // Устанавливаем цвет
+          }
         }
       });
-    });
-});
+    }
 
+    
+});
