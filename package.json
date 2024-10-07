@@ -18,5 +18,9 @@
     "aframe-scene",
     "webvr",
     "vr"
-  ]
+  ],
+  "dependencies": {
+    "@kumitterer/aframe-click-drag-component": "^4.0.1",
+    "aframe-aim-component": "^1.0.5"
+  }
 }
