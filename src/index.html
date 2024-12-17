@@ -10,11 +10,13 @@
   <script src="https://unpkg.com/aframe-layout-component@4.x.x/dist/aframe-layout-component.min.js"></script>
   <script src="https://unpkg.com/aframe-event-set-component@5.x.x/dist/aframe-event-set-component.min.js"></script>
   <script src="https://unpkg.com/aframe-proxy-event-component@2.1.0/dist/aframe-proxy-event-component.min.jss"></script>
+  <script src="https://unpkg.com/aframe-environment-component@1.3.3/dist/aframe-environment-component.min.js"></script>
 
   <script type="text/javascript" src="aim-component.js"></script>
   <link rel="stylesheet" href="style.css">
 
   <script id="pic" type="text/html">
+
       <a-entity class="link"> 
         <a-entity
           class="pic-link"
@@ -38,7 +40,7 @@
     </script>
 
 
-  <script src="app.js"></script>
+  <script src="bundle.js"></script>
 
 </head>
 
@@ -51,8 +53,9 @@
     </a-assets>
 
 
-
+    <a-entity environment="lightPosition: 1 5 -2; groundColor: #445"></a-entity>
     <a-entity id="links" layout="type: line; margin: 1.5" position="3 2 7" rotation="10 -70 0">
+      <a-entity template="src: #pic"></a-entity>
       <a-entity template="src: #pic"></a-entity>
       <a-entity template="src: #pic"></a-entity>
       <a-entity template="src: #pic"></a-entity>
@@ -71,10 +74,10 @@
     <a-sky color="#040223"></a-sky>
     <a-entity>
       <a-box aim="color: white" position="0 0 10" color="red" visible="false"></a-box>
-      <a-image position="0 0 10" rotation="-90 0 0" width="4" height="4"   src="#floor-image"></a-image>
+      <a-image position="0 0 10" rotation="-90 0 0" width="4" height="4" src="#floor-image"></a-image>
     </a-entity>
 
-    
+
   </a-scene>
 </body>
 
