@@ -11,7 +11,13 @@ module.exports = {
     server: 'https',
     static: {
       directory: path.join(__dirname, 'dist')
-    }
+    },
+    watchFiles: {
+      paths: ['src/**/*.*'],
+      options: {
+        usePolling: true,
+      },
+    },
   },
   devtool: 'source-map',
   plugins: [
@@ -21,5 +27,21 @@ module.exports = {
       scriptLoading: 'blocking',
       filename: 'index.html'
     })
-  ]
+  ],
+  module: {
+    rules: [{
+      test:  /\.(jpg|png|svg)$/,
+      type: 'asset/resource',
+      exclude: /(node_modules)/,
+      include: [path.resolve(__dirname, 'src')],
+      generator: {
+        filename: './images/[name][ext]'
+      } 
+    },
+    {
+      test: /\.html$/i,
+      loader: "html-loader",
+    },]
+  }
+
 }
