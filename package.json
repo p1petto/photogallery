@@ -9,13 +9,15 @@
     "watch": "webpack --mode development --watch",
     "start": "webpack serve --mode development",
     "clean": "rm -r dist/*",
-    "cleanbuild": "rm -r dist/* && webpack --mode production"
+    "cleanbuild": "rm -r dist/* && webpack --mode production",
+    "deploy": "gh-pages -d dist"
   },
   "author": "",
   "license": "",
   "devDependencies": {
     "css-loader": "^7.1.2",
     "file-loader": "^6.2.0",
+    "gh-pages": "^6.2.0",
     "html-bundler-webpack-plugin": "^4.10.3",
     "html-loader": "^5.1.0",
     "html-webpack-plugin": "^5.6.0",
