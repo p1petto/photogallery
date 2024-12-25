@@ -50,15 +50,8 @@ let images_container;
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // initDb();
   images_container = document.querySelector('#images_container');
-  // images_container.addEventListener(
-  //   "gone",
-  //   (e) => {
-  //    console.log("gone")
-  //   },
-  //   false,
-  // );
+
 });
 
 function initDb() {
@@ -85,42 +78,6 @@ function initDb() {
   }
 }
 
-// let images_list = []
-// let images_counter = 0
-// function injectImages() {
-//   let counter = 0
-//   const objectStore = db.transaction("cachedForms").objectStore("cachedForms");
-//   objectStore.openCursor().addEventListener("success", (e) => {
-//     // Get a reference to the cursor
-//     const cursor = e.target.result;
-
-//     // If there is still another data item to iterate through, keep running this code
-//     if (!cursor) {
-//       console.log("no images ...")
-//       createImageEntity()
-//       // setInterval(createImageEntity, 3600 * 5)
-//       return
-//     }
-//     console.log(cursor.value)
-
-
-
-//     let image = document.createElement("a-image");
-//     // images_container.appendChild(image)
-
-//     image.setAttribute("m-picture", "active: true; dimensions: 1920 1080")
-//     image.setAttribute("id", `im_${cursor.value.id}`)
-//     image.setAttribute("src", cursor.value.data);
-//     image.setAttribute("position", `-2 1.5 ${7 - counter}`);
-//     image.setAttribute("rotation", "0 90 0");
-//     images_list.push({ data: cursor.value.data, id: cursor.value.id })
-//     counter += 3
-//     cursor.continue();
-
-//   })
-
-
-// }
 
 async function createImageEntity() {
 
@@ -142,84 +99,44 @@ async function createImageEntity() {
 }
 
 async function* createIndexedDbGenerator(db, storeName, cacheSize = 1) {
-  const cursorCache = [];
-  let cursor = null;
-  let cursorRequest;
-  let isCursorActive = false; // Флаг активности курсора
 
-  console.log("hello1")
-  const getNextCursorResult = async () => {
-    console.log("getNextCursor.start");
+try {
+    let currentKey = undefined;
     
-    return new Promise((resolve, reject) => {
-      console.log("getNextCursor.afterreturn", cursor);
-      if (cursor === null) {
-        const transaction = db.transaction(storeName, "readonly");
-        const objectStore = transaction.objectStore(storeName);
-        cursorRequest = objectStore.openCursor();
-        cursorRequest.onsuccess = () => {
-          const result = cursorRequest.result;
-          if (result) {
-            resolve(result);
-          } else {
-            resolve(null);
-          }
-        };
-        cursorRequest.onerror = () => reject(cursorRequest.error);
-      }
-      else{
-        resolve(cursor)
-      }
-      console.log("getNextCursor.afterNULLCURSOR");
+    while (true) {
+        // Создаем новую транзакцию для каждой записи
+        const record = await new Promise((resolve, reject) => {
+            const transaction = db.transaction(storeName, 'readonly');
+            const store = transaction.objectStore(storeName);
+            
+            // Если ключ не определен, берем первую запись
+            // Иначе берем следующую запись после текущего ключа
+            const request = currentKey === undefined 
+                ? store.openCursor()
+                : store.openCursor(IDBKeyRange.lowerBound(currentKey, true));
 
+            request.onerror = () => reject(request.error);
+            request.onsuccess = (event) => {
+                const cursor = event.target.result;
+                if (cursor) {
+                    currentKey = cursor.key;
+                    resolve(cursor.value);
+                } else {
+                    resolve(null); // Больше записей нет
+                }
+            };
+        });
 
-    });
-  };
+        if (record === null) {
+          currentKey = undefined
+          continue;
+        }
 
-  const fillCache = async () => {
-    console.log("fillCache.start", cursorCache)
-    while (cursorCache.length < cacheSize && !isCursorActive) {
-      console.log("fillCache.after_while", cursorCache.length)
-      isCursorActive = true; // Устанавливаем флаг активности
-       cursor = await getNextCursorResult();
-      console.log("fillCache.body", cursor)
-      if (cursor) {
-        cursorCache.push(cursor.value); // Кешируем значение
-        console.log("fillCache.predcontinue", cursor)
-        cursor.continue(); // Переход к следующей записи
-        console.log("fillCache.postcontinue", cursor)
-      } else {
-        cursorRequest = null; // Сбрасываем курсор при достижении конца
-        break;
-      }
-      isCursorActive = false; // Сбрасываем флаг активности
-      console.log("fillCache.end", cursorCache)
+        yield record;
     }
-  };
-
-  while (true) {
-    console.log("hello")
-    if (cursorCache.length === 0) {
-      await fillCache();
-      console.log("awaitig for null cursor", cursorCache)
-      if (cursorCache.length === 0) {
-        // Если больше нет записей, начинаем сначала
-        cursorRequest = null;
-        await fillCache();
-        console.log("awaitig for null cursor")
-      }
-    }
-    console.log("yeild state",cursorCache)
-    const record = cursorCache.shift(); // Получаем первую запись из кеша
-    yield record;
-    console.log("waiting after yield")
-
-    // Подготавливаем следующую запись
-    if (cursorCache.length < cacheSize) {
-      console.log("waiting after (if) yield")
-      await fillCache();
-    }
-  }
+} finally {
+    db.close();
+}
 }
 
 
