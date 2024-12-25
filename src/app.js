@@ -84,18 +84,30 @@ async function createImageEntity() {
   console.log("createImageEntity")
   const image_data = await dbGenerator.next();
   console.log("image_data", image_data);
-  let image = document.createElement("a-image");
+  const dataURL = image_data.value.data;
 
-  image.setAttribute("m-picture", "active: true; dimensions: 1920 1080");
-  image.setAttribute("id", `im_${image_data.value.id}`);
-  image.setAttribute("src", image_data.value.data);
-  image.setAttribute("position", `-2 1.5 0`);
-  image.setAttribute("rotation", "0 90 0");
+  const img = new Image();
 
-
-  images_container.appendChild(image);
+  img.onload = () => {
+    console.log("Image successfully loaded");
 
 
+    let image = document.createElement("a-image");
+    image.setAttribute("m-picture", "active: true; dimensions: 1920 1080");
+    image.setAttribute("id", `im_${image_data.value.id}`);
+    image.setAttribute("src", dataURL); // Устанавливаем DataURL как источник
+    image.setAttribute("position", "-2 1.5 0");
+    image.setAttribute("rotation", "0 90 0");
+
+    images_container.appendChild(image);
+  };
+
+  img.onerror = (err) => {
+    console.error("Failed to load image", err);
+  };
+
+  img.src = dataURL;
+ 
 }
 
 async function* createIndexedDbGenerator(db, storeName, cacheSize = 1) {
