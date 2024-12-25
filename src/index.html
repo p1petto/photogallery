@@ -7,17 +7,12 @@
   </head>
 
   <body>
-    <a-scene>
-      <a-assets>
+    <a-scene m-global-storage  debug>
+      <a-assets id="assets">
         <!-- <audio
           id="click-sound"
           src="https://cdn.aframe.io/360-image-gallery-boilerplate/audio/click.ogg"
         ></audio> -->
-        <!-- <img
-          id="floor-image"
-          alt=""
-          src="https://cdn.glitch.global/d5227360-59d8-4247-aaa3-1132bbaf71bc/backglow.png?v=1727087133815"
-        /> -->
         <img
           id="floor-image"
           alt=""
@@ -41,24 +36,15 @@
           "
       ></a-entity>
 
-      <!-- <a-entity wasd-controlls id="view">
-        <a-camera position="0 1.6 0">
-          <a-entity cursor="fuse: false"
-            position="0 0 -1"
-            geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
-            material="color: black; shader: flat">
-          </a-entity>
-        </a-camera>
-      </a-entity>
-<!--  -->
       <a-box position="0 0 2.5" color="#3385ff" height=".25" waypoint=".125"></a-box> 
       
-    <a-entity id="links" layout="type: line; margin: 1.5" position="3 2 7" rotation="10 -70 0">
-      <a-entity template="src: #pic"></a-entity>
-      <a-entity template="src: #pic"></a-entity>
-      <a-entity template="src: #pic"></a-entity>
-      <a-entity template="src: #pic"></a-entity>
+    <a-entity m-picture-container id="images_container">
     </a-entity>
+    <!-- <a-image  m-picture="active: true; dimensions: 1920 1080" id="image_15" position="-2 1.5 7" rotation="0 90 0" width="4"></a-image> -->
+    <!-- <a-image  m-picture="active: true; dimensions: 1920 1080" id="image_16" position="-2 1.5 10" rotation="0 90 0" width="4"></a-image> -->
+    <a-sphere m-button-speed="speed: 0.001" color="yellow" position="-1 0.5 10" radius="0.1"></a-sphere>
+    <a-sphere m-button-speed="speed: 0.0001" color="red" position="-1 0.5 9.7" radius="0.1"></a-sphere>
+
 
     <a-camera position="0 1 10">
       <a-cursor id="cursor"

@@ -2,9 +2,9 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
-  entry: './src/app.js',
+  entry: { app: './src/app.js', form: "./src/storage.js" },
   output: {
-    filename: 'bundle.js',
+    filename: '[name].js',
     path: path.resolve(__dirname, 'dist')
   },
   devServer: {
@@ -23,20 +23,28 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: './src/index.html',
+      chunks: ['app'],
       inject: 'head',
       scriptLoading: 'blocking',
       filename: 'index.html'
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/form.html',
+      chunks: ['form'],
+      inject: 'head',
+      scriptLoading: 'blocking',
+      filename: 'form.html'
     })
   ],
   module: {
     rules: [{
-      test:  /\.(jpg|png|svg)$/,
+      test: /\.(jpg|png|svg)$/,
       type: 'asset/resource',
       exclude: /(node_modules)/,
       include: [path.resolve(__dirname, 'src')],
       generator: {
         filename: './images/[name][ext]'
-      } 
+      }
     },
     {
       test: /\.html$/i,

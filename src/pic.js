@@ -1,45 +1,85 @@
-// /* global AFRAME */
-// if (typeof AFRAME === 'undefined') {
-//     throw new Error('Component attempted to register before AFRAME was available.');
-// }
+/* global AFRAME */
+if (typeof AFRAME === 'undefined') {
+    throw new Error('Component attempted to register before AFRAME was available.');
+}
 
-// AFRAME.registerComponent('basic-scene', {
+export const event = new Event("gone");
 
-//     init: function() {
-//         // Box
-//         // <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
-//         let box = document.createElement('a-box');
-//         box.setAttribute('color', 'red');
-//         box.setAttribute('position', {x: -1, y: 0.5, z: -3});
-//         box.setAttribute('rotation', {x: 0, y: 45, z: 0});
-//         box.setAttribute('color', "#4CC3D9");
-//         box.setAttribute('animation', {'startEvents': 'click',
-//                                        'property': 'position',
-//                                        'from': {x: -1, y: 1.5, z: -3},
-//                                        'to': {x: -1, y: 0.5, z: -3},
-//                                        'dur': 1000});
-//         this.el.appendChild(box); 
+console.log("SDOFJSDPF!!")
+export let speed = { value: 0.001};
+AFRAME.registerComponent('m-picture', {
 
-//         // Sphere
-//         // <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
-//         let sphere = document.createElement('a-sphere');
-//         sphere.setAttribute('position', {x:0, y: 1.25, z: -5});
-//         sphere.setAttribute('radius', 1.25);
-//         sphere.setAttribute('color', "#EF2D5E");
-//         this.el.appendChild(sphere);
-//         sphere.addEventListener('click', function() {
-//             color = sphere.getAttribute('color');
-//             if (color == '#EF2D5E') {
-//                 sphere.setAttribute('color', 'red');
-//             } else {
-//                 sphere.setAttribute('color', '#EF2D5E');
-//             };
-//     });
-//         // Cylinder
-//         // <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
+    schema: {
+        // src: {type: "asset"},
+        active: { type: "boolean" },
+        dimensions: { type: "vec2" }
+    },
+    update: function (oldData) {
+        console.log('oldData', oldData)
 
-//         // Plane
-//         // <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+    },
+    init: function () {
+        console.log("init", this.data)
 
-//     }
-// });
+        let { xd, yd } = calculateAspectRatio(this.data.dimensions.x, this.data.dimensions.y)
+        console.log('xd, yd:', xd, yd)
+        let { xmeters, ymeters } = calculateDimensionsInMeters(xd, yd)
+        console.log('xmeters, ymeters:', xmeters, ymeters)
+        this.el.setAttribute("width", xmeters)
+        this.el.setAttribute("height", ymeters)
+        this.el.height = ymeters
+    },
+    tick: function (_, timeDelta) {
+        // console.log("tick")
+        this.el.object3D.position.z += speed.value * timeDelta;
+        // console.log(speed.value)
+        if (this.el.object3D.position.z > 20) {
+            // console.log("GONE FROM TICK")
+            this.el.remove()
+        }
+        // this.el. += 0.1 * timeDelta
+    },
+    events:
+    {
+        click: function (evt) {
+            console.log('This entity was clicked!');
+        }
+    }
+});
+
+/**
+ * Description
+ * @param {number} width
+ * @param {number} height
+ * @returns {{x: number, y: number}}
+ */
+function calculateAspectRatio(width, height) {
+    if (height === 0) {
+        throw new Error("Height cannot be zero.");
+    }
+
+    const gcd = (a, b) => (b === 0 ? a : gcd(b, a % b));
+    const divisor = gcd(width, height);
+
+    return { xd: width / divisor, yd: height / divisor };
+}
+
+
+/**
+ * Description
+ * @param {number} width
+ * @param {number} height
+ * @returns {number}
+ */
+function calculateDimensionsInMeters(widthRatio, heightRatio) {
+
+    if (isNaN(widthRatio) || isNaN(heightRatio) || widthRatio <= 0 || heightRatio <= 0) {
+        throw new Error("Invalid aspect ratio. It should be positive numbers.");
+    }
+
+    const scale = 2 / Math.max(widthRatio, heightRatio);
+    const scaledWidth = widthRatio * scale;
+    const scaledHeight = heightRatio * scale;
+
+    return { xmeters: scaledWidth, ymeters: scaledHeight };
+}
