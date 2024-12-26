@@ -42,32 +42,57 @@ function initDb() {
 
 
 function doFile(e) {
-    console.log('change event fired for input field');
-    let file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        //alert(e.target.result);
-        // let bits = ;
-        let bits = reader.result;
-        let ob = {
-            created:new Date(),
-            data:bits
-        };
-
-        let trans = db.transaction(['cachedForms'], 'readwrite');
-        let addReq = trans.objectStore('cachedForms').add(ob);
-
-        addReq.onerror = function(e) {
-            console.log('error storing data');
-            console.error(e);
-        }
-
-        trans.oncomplete = function(e) {
-            console.log('data stored');
-            displayData();
-        }
-    }
-    reader.readAsDataURL(file);
+  console.log('change event fired for input field');
+  const files = e.target.files;
+  
+  // Создаем массив промисов для обработки каждого файла
+  const filePromises = Array.from(files).map(file => {
+      return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          
+          reader.onload = function(e) {
+              const bits = reader.result;
+              const ob = {
+                  created: new Date(),
+                  data: bits,
+                  filename: file.name // Добавляем имя файла для различения
+              };
+              resolve(ob);
+          };
+          
+          reader.onerror = function(e) {
+              reject(e);
+          };
+          
+          reader.readAsDataURL(file);
+      });
+  });
+  
+  // Обрабатываем все файлы
+  Promise.all(filePromises)
+      .then(fileObjects => {
+          const trans = db.transaction(['cachedForms'], 'readwrite');
+          const store = trans.objectStore('cachedForms');
+          
+          // Добавляем каждый файл в базу данных
+          fileObjects.forEach(ob => {
+              const addReq = store.add(ob);
+              
+              addReq.onerror = function(e) {
+                  console.log('error storing data for file:', ob.filename);
+                  console.error(e);
+              };
+          });
+          
+          trans.oncomplete = function(e) {
+              console.log('all files stored successfully');
+              displayData();
+          };
+      })
+      .catch(error => {
+          console.log('Error processing files:');
+          console.error(error);
+      });
 }
 
 function doImageTest() {

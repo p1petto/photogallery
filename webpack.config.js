@@ -26,14 +26,14 @@ module.exports = {
       chunks: ['app'],
       inject: 'head',
       scriptLoading: 'blocking',
-      filename: 'index.html'
+      filename: 'app.html'
     }),
     new HtmlWebpackPlugin({
       template: './src/form.html',
       chunks: ['form'],
       inject: 'head',
       scriptLoading: 'blocking',
-      filename: 'form.html'
+      filename: 'index.html'
     })
   ],
   module: {
