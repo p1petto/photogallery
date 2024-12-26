@@ -1,0 +1,13 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Hello World!</title><script src="app.js"></script></head><body><a-scene m-global-storage debug><a-assets id="assets"><img id="floor-image" alt="" src="./images/backglow.png"/></a-assets><a-entity environment="
+          lightPosition: 1 2 2;
+          groundColor: #040223;
+          groundColor2: #040223;
+          groundTexture: walkernoise;
+          skyType: gradient; 
+          skyColor: #040223 ; horizonColor: #16124E;
+          grid: crosses; gridColor: white;
+          
+          fog: 0.995;
+          
+
+          "></a-entity><a-entity m-picture-container id="images_container"></a-entity><a-sphere m-button-speed="speed: 0.001" color="green" position="-1 0.5 10.3" radius="0.1"></a-sphere><a-sphere m-button-speed="speed: 0.0001" color="yellow" position="-1 0.5 10" radius="0.1"></a-sphere><a-sphere m-button-speed="speed: 0.00000" color="red" position="-1 0.5 9.7" radius="0.1"></a-sphere><a-camera position="0 1 10"><a-cursor id="cursor" animation__click="property: scale; from: 0.1 0.1 0.1; to: 1 1 1; easing: easeInCubic; dur: 150; startEvents: click" animation__clickreset="property: scale; to: 0.1 0.1 0.1; dur: 1; startEvents: animationcomplete__click" animation__fusing="property: scale; from: 1 1 1; to: 0.1 0.1 0.1; easing: easeInCubic; dur: 150; startEvents: fusing"></a-cursor></a-camera><a-entity><a-box aim="color: white" position="0 0 10" color="red" visible="false"></a-box><a-image position="0 0.01 10" rotation="-90 0 0" width="4" height="4" src="#floor-image"></a-image></a-entity></a-scene></body></html>
